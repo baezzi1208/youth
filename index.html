@@ -7,7 +7,7 @@
     content="width=device-width, initial-scale=1.0"
   />
 
-  <title>야키소바 주문</title>
+  <title>수업 등록</title>
 
   <script src="https://js.tosspayments.com/v2/standard"></script>
 
@@ -56,6 +56,133 @@
       color: #6b7684;
       font-size: 15px;
       line-height: 1.6;
+    }
+
+    /* ---------- 미디어 선택 카드 (사진1 / 사진2 / MOV) ---------- */
+    .media-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    .media-card {
+      position: relative;
+      display: block;
+      width: 100%;
+      padding: 0;
+      border: 1px solid #e5e8eb;
+      border-radius: 18px;
+      overflow: hidden;
+      background: #ffffff;
+      cursor: pointer;
+      text-align: left;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .media-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 22px rgba(0, 0, 0, 0.09);
+    }
+
+    .media-card.video-card {
+      grid-column: 1 / -1;
+    }
+
+    .media-thumb {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      display: block;
+      background: #dfe3e8;
+    }
+
+    .video-card .media-thumb {
+      height: 200px;
+    }
+
+    .play-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+
+    .play-overlay span {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.45);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+
+    .media-label {
+      padding: 12px 14px 14px;
+    }
+
+    .media-label strong {
+      display: block;
+      font-size: 16px;
+      margin-bottom: 3px;
+    }
+
+    .media-label span {
+      display: inline-block;
+      color: #3182f6;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .media-card.selected {
+      border-color: #3182f6;
+      box-shadow: 0 0 0 3px rgba(49, 130, 246, 0.15);
+    }
+
+    /* ---------- 체험 수업 신청 섹션 ---------- */
+    .trial-section {
+      margin-bottom: 20px;
+      padding: 20px;
+      background: #ffffff;
+      border: 1px solid #e5e8eb;
+      border-radius: 16px;
+    }
+
+    .trial-section h2 {
+      margin: 0 0 14px;
+      font-size: 18px;
+    }
+
+    .trial-section video {
+      width: 100%;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      background: #000;
+    }
+
+    .trial-result {
+      display: none;
+      margin-top: 14px;
+      padding: 14px;
+      border-radius: 10px;
+      background: #ebfbee;
+      border: 1px solid #8ce99a;
+      color: #2b8a3e;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .trial-result.show {
+      display: block;
     }
 
     .card {
@@ -118,21 +245,6 @@
 
     .unit-price {
       color: #4e5968;
-    }
-
-    select {
-      min-width: 105px;
-      padding: 11px 36px 11px 14px;
-      border: 1px solid #d1d6db;
-      border-radius: 10px;
-      background: #ffffff;
-      color: #191f28;
-      outline: none;
-    }
-
-    select:focus {
-      border-color: #3182f6;
-      box-shadow: 0 0 0 3px rgba(49, 130, 246, 0.12);
     }
 
     .total-row {
@@ -216,6 +328,18 @@
       cursor: not-allowed;
       opacity: 0.55;
       transform: none;
+    }
+
+    .trial-submit-button {
+      width: 100%;
+      padding: 15px;
+      border: 0;
+      border-radius: 13px;
+      background: #191f28;
+      color: #ffffff;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
     }
 
     .notice {
@@ -336,6 +460,10 @@
       .content {
         padding: 21px;
       }
+
+      .media-grid {
+        grid-template-columns: 1fr 1fr;
+      }
     }
   </style>
 </head>
@@ -343,11 +471,117 @@
 <body>
   <main class="page">
     <header class="header">
-      <h1>야키소바 주문</h1>
+      <h1>수업 등록</h1>
       <p>
-        수량을 선택한 후 토스페이먼츠 결제창에서 결제를 진행하세요.
+        원하시는 수업을 선택해서 바로 등록하거나, 체험 수업을 신청해보세요.
       </p>
     </header>
+
+    <!-- 사진1 / 사진2 / MOV 선택 카드 -->
+    <section class="media-grid">
+      <button
+        type="button"
+        id="cardWeekly1"
+        class="media-card"
+        onclick="selectProduct('weekly1')"
+      >
+        <img
+          class="media-thumb"
+          src="https://raw.githubusercontent.com/baezzi1208/youth/main/play1.jpeg"
+          alt="주 1회 수업"
+        />
+        <div class="media-label">
+          <strong>주 1회 수업</strong>
+          <span>눌러서 바로 등록하기 →</span>
+        </div>
+      </button>
+
+      <button
+        type="button"
+        id="cardWeekly2"
+        class="media-card"
+        onclick="selectProduct('weekly2')"
+      >
+        <img
+          class="media-thumb"
+          src="https://raw.githubusercontent.com/baezzi1208/youth/main/play2.jpeg"
+          alt="주 2회 수업"
+        />
+        <div class="media-label">
+          <strong>주 2회 수업</strong>
+          <span>눌러서 바로 등록하기 →</span>
+        </div>
+      </button>
+
+      <button
+        type="button"
+        id="cardTrial"
+        class="media-card video-card"
+        onclick="openTrial()"
+      >
+        <video
+          class="media-thumb"
+          muted
+          playsinline
+          preload="metadata"
+        >
+          <source
+            src="https://raw.githubusercontent.com/baezzi1208/youth/main/mov.mp4"
+            type="video/mp4"
+          />
+        </video>
+        <div class="play-overlay"><span>▶</span></div>
+        <div class="media-label">
+          <strong>체험 수업</strong>
+          <span>눌러서 체험 수업 신청하기 →</span>
+        </div>
+      </button>
+    </section>
+
+    <!-- 체험 수업 신청 영역 (MOV 클릭 시 표시) -->
+    <section id="trialSection" class="trial-section" style="display: none">
+      <h2>체험 수업 신청</h2>
+
+      <video controls preload="metadata">
+        <source
+          src="https://raw.githubusercontent.com/baezzi1208/youth/main/mov.mp4"
+          type="video/mp4"
+        />
+      </video>
+
+      <div class="field">
+        <label for="trialName">이름</label>
+        <input
+          id="trialName"
+          type="text"
+          maxlength="30"
+          placeholder="홍길동"
+          autocomplete="name"
+        />
+      </div>
+
+      <div class="field">
+        <label for="trialPhone">연락처</label>
+        <input
+          id="trialPhone"
+          type="tel"
+          maxlength="20"
+          placeholder="010-0000-0000"
+          autocomplete="tel"
+        />
+      </div>
+
+      <button
+        id="trialSubmitButton"
+        class="trial-submit-button"
+        type="button"
+        onclick="submitTrial()"
+      >
+        체험 수업 신청하기
+      </button>
+
+      <div id="trialResult" class="trial-result"></div>
+    </section>
 
     <section id="loadingBox" class="loading">
       <div class="spinner"></div>
@@ -372,43 +606,32 @@
 
     <div id="orderArea">
       <section class="card">
-        <div class="food-image" aria-label="야키소바">
-          🍜
+        <div class="food-image" aria-label="수업 등록">
+          🏃
         </div>
 
         <div class="content">
-          <span class="badge">인기 메뉴</span>
+          <span id="productBadge" class="badge">선택된 수업</span>
 
-          <h2 class="product-title">야키소바</h2>
+          <h2 id="productTitle" class="product-title">주 1회 수업</h2>
 
-          <p class="description">
-            쫄깃한 면과 채소를 고소한 소스에 볶아 만든 일본식 볶음면입니다.
+          <p id="productDescription" class="description">
+            위에서 사진을 눌러 원하시는 수업을 선택하세요. 선택한 수업으로
+            바로 결제가 진행됩니다.
           </p>
 
           <div class="row">
             <div>
               <div class="row-label">가격</div>
-              <div class="unit-price">1개 기준</div>
+              <div class="unit-price">1개월 기준</div>
             </div>
 
-            <strong>1,000원</strong>
-          </div>
-
-          <div class="row">
-            <label for="quantity" class="row-label">수량</label>
-
-            <select id="quantity">
-              <option value="1">1개</option>
-              <option value="2">2개</option>
-              <option value="3">3개</option>
-              <option value="4">4개</option>
-              <option value="5">5개</option>
-            </select>
+            <strong id="unitPriceText">150,000원</strong>
           </div>
 
           <div class="row total-row">
             <span class="total-label">총 결제금액</span>
-            <strong id="totalPrice" class="total-price">1,000원</strong>
+            <strong id="totalPrice" class="total-price">150,000원</strong>
           </div>
         </div>
       </section>
@@ -440,7 +663,7 @@
       </section>
 
       <button id="payButton" class="pay-button" type="button">
-        1,000원 결제하기
+        150,000원 결제하기
       </button>
 
       <p class="notice">
@@ -458,12 +681,40 @@
      */
     const CLIENT_KEY = "test_ck_Ba5PzR0ArnE9lwPR0bJzVvmYnNeD";
 
-    const PRODUCT = {
-      name: "야키소바",
-      unitPrice: 1000
+    /*
+     * 체험 수업 신청을 받을 이메일 주소입니다.
+     * 실제 운영 시 본인 이메일 주소로 꼭 교체해주세요.
+     */
+    const INSTRUCTOR_EMAIL = "여기에_이메일_주소를_입력하세요";
+
+    // 사진1 = 주1회 수업, 사진2 = 주2회 수업
+    const PRODUCTS = {
+      weekly1: {
+        key: "weekly1",
+        badge: "주 1회 수업",
+        name: "주 1회 수업",
+        description: "매주 1회, 꾸준히 기초부터 다져가는 수업입니다.",
+        unitPrice: 150000
+      },
+      weekly2: {
+        key: "weekly2",
+        badge: "주 2회 수업",
+        name: "주 2회 수업",
+        description: "매주 2회, 더 빠른 성장을 원하는 분들을 위한 수업입니다.",
+        unitPrice: 200000
+      }
     };
 
-    const quantitySelect = document.getElementById("quantity");
+    let currentProductKey = "weekly1";
+
+    const quantity = 1; // 수업 등록은 항상 1개로 결제합니다.
+
+    const productBadge = document.getElementById("productBadge");
+    const productTitle = document.getElementById("productTitle");
+    const productDescription = document.getElementById(
+      "productDescription"
+    );
+    const unitPriceText = document.getElementById("unitPriceText");
     const totalPriceElement = document.getElementById("totalPrice");
     const payButton = document.getElementById("payButton");
     const customerNameInput = document.getElementById("customerName");
@@ -477,23 +728,97 @@
     const resultMessage = document.getElementById("resultMessage");
     const orderDetail = document.getElementById("orderDetail");
 
+    const cardWeekly1 = document.getElementById("cardWeekly1");
+    const cardWeekly2 = document.getElementById("cardWeekly2");
+    const trialSection = document.getElementById("trialSection");
+    const trialName = document.getElementById("trialName");
+    const trialPhone = document.getElementById("trialPhone");
+    const trialResult = document.getElementById("trialResult");
+
     function formatWon(amount) {
       return new Intl.NumberFormat("ko-KR").format(amount) + "원";
     }
 
-    function getQuantity() {
-      return Number(quantitySelect.value);
+    function getCurrentProduct() {
+      return PRODUCTS[currentProductKey];
     }
 
     function getTotalAmount() {
-      return PRODUCT.unitPrice * getQuantity();
+      return getCurrentProduct().unitPrice * quantity;
     }
 
     function updatePrice() {
+      const product = getCurrentProduct();
       const amount = getTotalAmount();
 
+      productBadge.textContent = product.badge;
+      productTitle.textContent = product.name;
+      productDescription.textContent = product.description;
+      unitPriceText.textContent = formatWon(product.unitPrice);
       totalPriceElement.textContent = formatWon(amount);
       payButton.textContent = `${formatWon(amount)} 결제하기`;
+    }
+
+    // 사진1 / 사진2 클릭 시: 수업 선택 + 결제 영역으로 스크롤
+    function selectProduct(key) {
+      currentProductKey = key;
+      updatePrice();
+
+      cardWeekly1.classList.toggle("selected", key === "weekly1");
+      cardWeekly2.classList.toggle("selected", key === "weekly2");
+
+      trialSection.style.display = "none";
+
+      orderArea.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    // MOV 클릭 시: 영상 + 체험 신청 폼 노출
+    function openTrial() {
+      trialSection.style.display = "block";
+      trialResult.classList.remove("show");
+      trialResult.textContent = "";
+
+      trialSection.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function submitTrial() {
+      const name = trialName.value.trim();
+      const phone = trialPhone.value.trim();
+
+      if (!name) {
+        alert("이름을 입력해주세요.");
+        trialName.focus();
+        return;
+      }
+
+      if (!phone) {
+        alert("연락처를 입력해주세요.");
+        trialPhone.focus();
+        return;
+      }
+
+      /*
+       * 별도 서버가 없어서, 신청 내용을 이메일로 보내는 방식으로
+       * 처리합니다. INSTRUCTOR_EMAIL을 실제 이메일로 교체하면
+       * 신청자가 '신청하기'를 누를 때 메일 앱이 열립니다.
+       * 나중에 구글폼이나 서버 연동으로 교체할 수 있습니다.
+       */
+      const subject = encodeURIComponent(`체험 수업 신청 - ${name}`);
+      const body = encodeURIComponent(
+        `이름: ${name}\n연락처: ${phone}`
+      );
+
+      if (
+        INSTRUCTOR_EMAIL &&
+        INSTRUCTOR_EMAIL !== "여기에_이메일_주소를_입력하세요"
+      ) {
+        window.location.href =
+          `mailto:${INSTRUCTOR_EMAIL}?subject=${subject}&body=${body}`;
+      }
+
+      trialResult.classList.add("show");
+      trialResult.textContent =
+        "체험 수업 신청이 접수되었어요. 빠르게 연락드릴게요!";
     }
 
     function createRandomId(prefix) {
@@ -510,7 +835,7 @@
        * 토스 orderId는 영문, 숫자, -, _를 사용하고
        * 6자 이상 64자 이하로 생성합니다.
        */
-      return createRandomId("YAKISOBA");
+      return createRandomId("CLASS");
     }
 
     function createCustomerKey() {
@@ -557,8 +882,8 @@
         return;
       }
 
+      const product = getCurrentProduct();
       const amount = getTotalAmount();
-      const quantity = getQuantity();
       const orderId = createOrderId();
       const customerKey = createCustomerKey();
 
@@ -571,8 +896,7 @@
         JSON.stringify({
           orderId,
           amount,
-          quantity,
-          orderName: `${PRODUCT.name} ${quantity}개`
+          orderName: product.name
         })
       );
 
@@ -595,10 +919,7 @@
           },
 
           orderId,
-          orderName:
-            quantity === 1
-              ? PRODUCT.name
-              : `${PRODUCT.name} ${quantity}개`,
+          orderName: product.name,
 
           customerName: customerNameInput.value.trim(),
           customerEmail: customerEmailInput.value.trim(),
@@ -732,7 +1053,7 @@
           success: true,
           title: "결제가 완료되었습니다.",
           message:
-            "야키소바 주문이 정상적으로 승인되었습니다.",
+            "수업 등록이 정상적으로 승인되었습니다.",
           detail: `
             <strong>주문번호</strong>: ${escapeHtml(orderId)}<br />
             <strong>결제금액</strong>: ${formatWon(amount)}<br />
@@ -826,10 +1147,9 @@
     }
 
     function initializePage() {
-      quantitySelect.addEventListener("change", updatePrice);
       payButton.addEventListener("click", requestPayment);
 
-      updatePrice();
+      selectProduct("weekly1");
 
       const params = new URLSearchParams(window.location.search);
       const paymentResult = params.get("payment");
